@@ -27,7 +27,7 @@ int main(void)
 		{
 			if ( plan[cpt][cpt2]== 1 )
 			{
-				dessiner_rectangle( p1, 10, 10, white );
+				dessiner_rectangle( p1, 10, 10, forestgreen );
 			}
 
 		p1.x = p1.x+10;
@@ -35,6 +35,20 @@ int main(void)
 		p1.x = 0;	/*Initialise à 0 pour rétourner à la ligne*/
 		printf("\n\n");
 	}
+/////////////////////////////////////////////////////////////////////////////////////////////
+//Portes//
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	Point Prt1 = { 50, 80 };
+	Point Prt2 = { 400, 100 };
+	Point Prt3 = { 670, 350 };
+
+	dessiner_rectangle( Prt1, 10, 10, gris );
+	dessiner_rectangle( Prt2, 10, 10, gris );
+	dessiner_rectangle( Prt3, 10, 10, gris );
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 	actualiser();
 	attendre_clic();
