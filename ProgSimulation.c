@@ -6,58 +6,41 @@
 #include "lib/libgraphique.h"
 #include "lib/lib_foule.h"
 
-#define NPIXEL 10
+#define NPIXEL 10	/*Tailles des entités en pixel*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-
+/*Le joueur a une position et une destination*/
 typedef struct 
 {
 	Point position;
 	Point destination;
 } Joueur;
 
+/*Prototypes de fonctions*/
+void afficher_plan(int plan[80][60]);
+void afficher_joueur(Joueur j);
+
 int main(void)
 {
 	int plan[80][60];	/*Création d'un tableau representant le plan*/
-	int cpt, cpt2;		/*Création des variables pour compteurs*/
-	Point p1 = { 0, 0 };	/*Point qui sert à dessiner les obstacles( rectangles )*/
-
-	ouvrir_fenetre(80*NPIXEL, 60*NPIXEL);
 	charge_plan("data/plan.txt", plan);
+	
+	ouvrir_fenetre(80*NPIXEL, 60*NPIXEL);
 
-//////////////////////////////////Affichage plan graphique//////////////////////////////////
+//////////////////////////////////Affichage graphique//////////////////////////////////
 
 //Plan//
 
-	for (cpt2 = 0; cpt2 < 60; cpt2++ )	/*Teste les colonnes*/
-	{
-		for (cpt = 0; cpt < 80; cpt++ )		/*Teste les lignes*/
-		{
-			if ( plan[cpt][cpt2]== 1 )
-			{
-				dessiner_rectangle( p1, NPIXEL, NPIXEL, forestgreen );
-			}
-			p1.x = p1.x+NPIXEL;
-		}
-		p1.x = 0;	/*Initialise à 0 pour rétourner à la ligne*/
-		p1.y = p1.y+NPIXEL;
-	}
+	afficher_plan(plan);
 
-//Portes//
-
+//Joueurs//
 
 	Point prt1 = { 5*NPIXEL, 8*NPIXEL };
 	Point prt2 = { 40*NPIXEL, 10*NPIXEL };
 	Point prt3 = { 67*NPIXEL, 35*NPIXEL };
-
-	dessiner_rectangle( prt1, NPIXEL, NPIXEL, gris );
-	dessiner_rectangle( prt2, NPIXEL, NPIXEL, gris );
-	dessiner_rectangle( prt3, NPIXEL, NPIXEL, gris );
-
-//Joueurs//
-
-	Joueur j1 = { prt1, prt3 };
-	dessiner_rectangle( j1.position, NPIXEL, NPIXEL, red );
+	
+	Joueur j1 = { prt2, prt3 };
+	afficher_joueur(j1);
 
 	actualiser();
 	attendre_clic();
@@ -88,9 +71,10 @@ int main(void)
 		
 			}
 		}
-		dessiner_rectangle( j1.position, NPIXEL, NPIXEL, red );
+		afficher_plan(plan);
+		afficher_joueur(j1);
 		actualiser();
-		attente(120);
+		attente(80);
 	}
 	
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,4 +83,44 @@ int main(void)
 	attendre_clic();
 	fermer_fenetre();
 	return 0;
+}
+
+
+void afficher_plan(int plan[80][60])	/*Affiche le plan avec les portes*/
+{
+	int cpt, cpt2;		/*Création des variables pour compteurs*/
+	Point p1 = { 0, 0 };	/*Point qui sert à dessiner les obstacles ( rectangles )*/
+	
+	/*Determine et affiche les obstacles dans le plan*/
+	for (cpt2 = 0; cpt2 < 60; cpt2++ )	/*Parcours les colonnes*/
+	{
+		for (cpt = 0; cpt < 80; cpt++ )		/*Parcours les lignes*/
+		{
+			if ( plan[cpt][cpt2] == 1 )	/*Vérifie si la valeur correspond à un obstacle*/
+			{
+				dessiner_rectangle( p1, NPIXEL, NPIXEL, forestgreen );
+			}
+			else	/*Affiche le fond du plan*/
+			{
+				dessiner_rectangle( p1, NPIXEL, NPIXEL, black );
+			}
+			p1.x = p1.x+NPIXEL;
+		}
+		p1.x = 0;	/*Initialise à 0 pour rétourner à la ligne*/
+		p1.y = p1.y+NPIXEL;
+	}
+
+	/*Portes*/
+	Point prt1 = { 5*NPIXEL, 8*NPIXEL };
+	Point prt2 = { 40*NPIXEL, 10*NPIXEL };
+	Point prt3 = { 67*NPIXEL, 35*NPIXEL };
+	
+	dessiner_rectangle( prt1, NPIXEL, NPIXEL, gris );
+	dessiner_rectangle( prt2, NPIXEL, NPIXEL, gris );
+	dessiner_rectangle( prt3, NPIXEL, NPIXEL, gris );
+}
+
+void afficher_joueur(Joueur j)
+{
+	dessiner_rectangle( j.position, NPIXEL, NPIXEL, red );
 }
