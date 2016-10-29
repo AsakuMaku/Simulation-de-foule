@@ -59,6 +59,40 @@ int main(void)
 	Joueur j1 = { prt1, prt3 };
 	dessiner_rectangle( j1.position, NPIXEL, NPIXEL, red );
 
+	actualiser();
+	attendre_clic();
+
+	while ( j1.position.x != j1.destination.x || j1.position.y != j1.destination.y )
+	{
+
+		if ( j1.position.x < j1.destination.x )
+		{
+			j1.position.x = j1.position.x+NPIXEL;
+		}
+		else if ( j1.position.x > j1.destination.x )
+		{
+			j1.position.x = j1.position.x-NPIXEL;
+		}
+		else 
+		{
+			if ( j1.position.y < j1.destination.y )
+			{
+				j1.position.y = j1.position.y+NPIXEL;
+			}
+			else if ( j1.position.y > j1.destination.y )
+			{
+				j1.position.y = j1.position.y-NPIXEL;
+			}
+			else 
+			{
+		
+			}
+		}
+		dessiner_rectangle( j1.position, NPIXEL, NPIXEL, red );
+		actualiser();
+		attente(120);
+	}
+	
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 	actualiser();
