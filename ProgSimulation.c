@@ -19,6 +19,8 @@ typedef struct
 /*Prototypes de fonctions*/
 void afficher_plan(int plan[80][60]);
 void afficher_joueur(Joueur j);
+Joueur deplacer_joueur(int plan[80][60], Joueur j);
+int anti_mur( int plan[80][60], Joueur j, char direction);
 
 int main(void)
 {
@@ -40,6 +42,7 @@ int main(void)
 	Point prt3 = { 67*NPIXEL, 35*NPIXEL };
 	
 	Joueur j1 = { prt2, prt3 };
+	j1.position.y += NPIXEL*2;
 	afficher_joueur(j1);
 
 	actualiser();
@@ -47,30 +50,8 @@ int main(void)
 
 	while ( j1.position.x != j1.destination.x || j1.position.y != j1.destination.y )
 	{
-
-		if ( j1.position.x < j1.destination.x )
-		{
-			j1.position.x = j1.position.x+NPIXEL;
-		}
-		else if ( j1.position.x > j1.destination.x )
-		{
-			j1.position.x = j1.position.x-NPIXEL;
-		}
-		else 
-		{
-			if ( j1.position.y < j1.destination.y )
-			{
-				j1.position.y = j1.position.y+NPIXEL;
-			}
-			else if ( j1.position.y > j1.destination.y )
-			{
-				j1.position.y = j1.position.y-NPIXEL;
-			}
-			else 
-			{
+		j1 = deplacer_joueur( plan, j1 );
 		
-			}
-		}
 		afficher_plan(plan);
 		afficher_joueur(j1);
 		actualiser();
@@ -98,7 +79,7 @@ void afficher_plan(int plan[80][60])	/*Affiche le plan avec les portes*/
 		{
 			if ( plan[cpt][cpt2] == 1 )	/*Vérifie si la valeur correspond à un obstacle*/
 			{
-				dessiner_rectangle( p1, NPIXEL, NPIXEL, forestgreen );
+				dessiner_rectangle( p1, NPIXEL, NPIXEL, sarcelle );
 			}
 			else	/*Affiche le fond du plan*/
 			{
@@ -123,4 +104,63 @@ void afficher_plan(int plan[80][60])	/*Affiche le plan avec les portes*/
 void afficher_joueur(Joueur j)
 {
 	dessiner_rectangle( j.position, NPIXEL, NPIXEL, red );
+}
+
+Joueur deplacer_joueur(int plan[80][60], Joueur j)
+{
+	if ( j.position.x < j.destination.x && anti_mur(plan, j, 'd' ))
+	{
+		j.position.x = j.position.x+NPIXEL;
+	}
+	else if ( j.position.x > j.destination.x )
+	{
+		j.position.x = j.position.x-NPIXEL;
+	}
+	else 
+	{
+		if ( j.position.y < j.destination.y )
+		{
+			j.position.y = j.position.y+NPIXEL;
+		}
+		else if ( j.position.y > j.destination.y )
+		{
+			j.position.y = j.position.y-NPIXEL;
+		}
+		else 
+		{
+	
+		}
+	}
+	return j;
+}
+
+int anti_mur( int plan[80][60], Joueur j, char direction )
+{
+	int vertical = 0, horizontal = 0;
+	
+	if ( direction == 'h' )
+	{
+		vertical = -NPIXEL;
+	}
+	else if ( direction == 'b' )
+	{
+		vertical = +NPIXEL;
+	}
+	else if ( direction == 'g' )
+	{
+		horizontal = -NPIXEL;
+	}
+	else if ( direction == 'd' )
+	{
+		horizontal = +NPIXEL;
+	}
+
+	if ( plan[(j.position.x+horizontal)/NPIXEL][(j.position.y+vertical)/NPIXEL] == 1 )
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
 }
