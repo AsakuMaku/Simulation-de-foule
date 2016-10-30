@@ -21,11 +21,16 @@ void afficher_plan(int plan[80][60]);
 void afficher_joueur(Joueur j);
 Joueur deplacer_joueur(int plan[80][60], Joueur j);
 int anti_mur( int plan[80][60], Joueur j, char direction);
+void charger_joueurs(char *fjoueurs, Joueur joueurs[50]);
+
 
 int main(void)
 {
 	int plan[80][60];	/*Création d'un tableau representant le plan*/
 	charge_plan("data/plan.txt", plan);
+	
+	Joueur joueurs[50];	/*Création d'un tableau representant le plan*/
+	charger_joueurs("data/joueurs", joueurs);
 	
 	ouvrir_fenetre(80*NPIXEL, 60*NPIXEL);
 
@@ -40,9 +45,11 @@ int main(void)
 	Point prt1 = { 5*NPIXEL, 8*NPIXEL };
 	Point prt2 = { 40*NPIXEL, 10*NPIXEL };
 	Point prt3 = { 67*NPIXEL, 35*NPIXEL };
+	printf("%d %d %d %d\n", joueurs[0].position.x, joueurs[0].position.y, joueurs[0].destination.x, joueurs[0].destination.y);
 	
-	Joueur j1 = { prt2, prt3 };
-	j1.position.y += NPIXEL*2;
+	//Joueur j1 = { prt2, prt3 };
+	//j1.position.y += NPIXEL*2;
+	Joueur j1 = joueurs[5];
 	afficher_joueur(j1);
 
 	actualiser();
@@ -163,4 +170,48 @@ int anti_mur( int plan[80][60], Joueur j, char direction )
 	{
 		return 1;
 	}
+}
+
+void charger_joueurs( char *fjoueurs, Joueur joueurs[50] )
+{
+    FILE *f = fopen( fjoueurs,"r" );
+    int nbJoueur, i, j;
+    char c;
+
+    if( !f )
+    {
+        printf( "Fichier '%s': ouverture impossible\n",fjoueurs );
+        exit( 1 );
+    }
+
+    fscanf( f,"%d\n",&nbJoueur );
+    if( nbJoueur!=50 )
+    {
+        printf( "Fichier '%s': dimensions du tableau lues dans incorrectes\n",fjoueurs );
+        exit( 1 );
+    }
+
+    for( j=0; j!=nbJoueur; j++ )
+    {
+    	int t;
+    	// position.x
+    	fscanf( f,"%d",&joueurs[j].position.x);
+    	fscanf( f,"%c",&c);
+    	// position.y
+    	fscanf( f,"%d",&joueurs[j].position.y);
+    	fscanf( f,"%c",&c);
+    	// destination.x
+    	fscanf( f,"%d",&joueurs[j].destination.x);
+    	fscanf( f,"%c",&c);
+    	// destination.y
+    	fscanf( f,"%d",&joueurs[j].destination.y);
+    	fscanf( f,"%c",&c);
+    	
+    	// Multiplie par la taille en pixel
+    	joueurs[j].position.x *= NPIXEL;
+    	joueurs[j].position.y *= NPIXEL;
+    	joueurs[j].destination.x *= NPIXEL;
+    	joueurs[j].destination.y *= NPIXEL;
+    }
+    fclose(f);
 }
